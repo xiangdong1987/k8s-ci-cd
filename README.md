@@ -1,4 +1,4 @@
 # k8s-ci-cd
-## 目录结构
-1. 整个项目是python一个博客系统使用这个系统做简单实验
-2. 
+## 目录
+* [kubeadm搭建k8s](https://github.com/xiangdong1987/k8s-ci-cd/tree/main/studyNode/1 "kubeadm搭建k8s")
+## 
