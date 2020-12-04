@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: myblog-tls
+  namespace: demo
+spec:
+  rules:
+  - host: myblog.devops.cn
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: myblog
+          servicePort: 80
+  tls:
+  - hosts:
+    - myblog.devops.cn
+    secretName: https-secret

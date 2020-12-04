@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: demo
+spec:
+  replicas: 1	#指定Pod副本数
+  selector:		#指定Pod的选择器
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:	#给Pod打label
+        app: mysql
+    spec:
+      hostNetwork: true	# 声明pod的网络模式为host模式，效果通docker run --net=host
+      volumes: 
+      - name: mysql-data
+        hostPath: 
+          path: /opt/mysql/data
+      nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点
+        component: mysql
+      containers:
+      - name: mysql
+        image: 172.21.32.6:5000/mysql:5.7
+        args:
+        - "--character-set-server=utf8"     #
+        - "--collation-server=utf8_general_ci"    #  指定字符编码
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: myblog
+              key: MYSQL_USER
+        - name: MYSQL_PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: myblog
+              key: MYSQL_PASSWD
+        - name: MYSQL_DATABASE
+          value: "myblog"
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 50m
+          limits:
+            memory: 500Mi
+            cpu: 100m
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql

@@ -11,4 +11,16 @@
 * [jenkins CI](https://github.com/xiangdong1987/k8s-ci-cd/tree/main/studyNode/9 "jenkins CI")
 * [sharedLibary](https://github.com/xiangdong1987/k8s-ci-cd/tree/main/studyNode/10 "sharedLibary")
 
-## 
+## 环境
+* 两台2核4g腾讯云
+> k8s 最低两核否则会报错可以忽略但是为了能带动相关软件还是要大一点，腾讯云也比阿里云便宜所以用腾讯云
+
+## 教程
+* [B站教程](https://www.bilibili.com/video/BV1Pi4y1L7XC)
+
+## 目录
+* resources 实践所有yaml脚本
+* studyNode 学习笔记
+* 可以自己构建相关镜像，或者使用教程中百度网盘的registry
+
+祝大家学习愉快

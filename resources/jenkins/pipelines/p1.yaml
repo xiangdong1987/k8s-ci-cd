@@ -1,0 +1,22 @@
+pipeline {
+   agent any
+
+   stages {
+      stage('printenv') {
+         steps {
+            echo 'Hello World'
+            sh 'printenv'
+         }
+      }
+      stage('check') {
+         steps {
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gitlab-user', url: 'http://152.136.62.143/root/myblog.git']]])
+         }
+      }
+      stage('build-image') {
+         steps {
+            sh 'docker build . -t myblog:latest'
+         }
+      }
+   }
+}

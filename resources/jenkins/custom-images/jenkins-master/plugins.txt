@@ -1,0 +1,6 @@
+ace-editor:1.1
+allure-jenkins-plugin:2.28.1
+ant:1.10
+antisamy-markup-formatter:1.6
+apache-httpcomponents-client-4-api:4.5.10-1.0
+authentication-tokens:1.3

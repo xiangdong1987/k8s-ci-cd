@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonar-postgres
+  labels:
+    app: sonar-postgres
+  namespace: jenkins
+spec:
+  ports:
+  - name: server
+    port: 5432
+    targetPort: 5432
+    protocol: TCP
+  selector:
+    app: sonar-postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: jenkins
+  name: sonar-postgres
+  labels:
+    app: sonar-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonar-postgres
+  template:
+    metadata:
+      labels:
+        app: sonar-postgres
+    spec:
+      nodeSelector:
+        sonar: "true"
+      tolerations:
+      - operator: "Exists"
+      containers:
+      - name: postgres
+        image:  172.21.32.13:5000/postgres:11.4
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB             #PostgreSQL 数据库名称
+          value: "sonar"
+        - name: POSTGRES_USER           #PostgreSQL 用户名
+          valueFrom:
+            secretKeyRef:
+              name: sonar
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD       #PostgreSQL 密码
+          valueFrom:
+            secretKeyRef:
+              name: sonar
+              key: POSTGRES_PASSWORD
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2048Mi
+          requests:
+            cpu: 500m
+            memory: 1024Mi
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgredb
+      volumes:
+      - name: postgredb
+        hostPath:
+          path: /var/lib/postgres/
+          type: Directory
